@@ -1,12 +1,39 @@
+// Load environment variables
 require('dotenv').config();
+
+// Import dependencies
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Pool } = require('pg');
+const pool = require('./db'); // your database connection
 
+// Initialize Express
 const app = express();
 const port = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors());
+app.use(express.json()); // to parse JSON requests
+
+// Serve frontend files from 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Example: serve index.html on root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Example: API route
+app.get('/api/test', async (req, res) => {
+  res.send('API is working!');
+});
+
+// Start server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
 // Middleware
 app.use(cors());
