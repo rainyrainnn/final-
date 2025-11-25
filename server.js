@@ -2,6 +2,16 @@
 // SERVER.JS - CLEAN VERSION
 // =====================
 
+app.get('/api/db-test', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT 1 as ok');
+    res.json({ db: 'ok', rows: r.rows });
+  } catch (err) {
+    console.error('DB test failed', err);
+    res.status(500).json({ error: 'db test failed', details: err.message });
+  }
+});
+
 // Load environment variables
 require('dotenv').config();
 
