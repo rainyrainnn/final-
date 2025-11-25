@@ -1,34 +1,35 @@
-// script.js - top section
+/* ============================
+       LOGIN-FIRST REDIRECT
+============================ */
 const currentPage = window.location.pathname.split('/').pop();
-
-// Define which pages require login
 const protectedPages = ['index.html', 'planner.html', 'flashcards.html', 'library.html', 'dashboard.html'];
 
-// Simple check if user is logged in
 function isLoggedIn() {
-  return !!localStorage.getItem('edu_token'); // token stored after login
+  return !!localStorage.getItem('edu_token');
 }
 
-// If the current page is protected and user is not logged in -> redirect
+// Force login for protected pages
 if (protectedPages.includes(currentPage) && !isLoggedIn()) {
-  // Optionally store where the user wanted to go
   localStorage.setItem('redirectAfterLogin', currentPage);
   window.location.href = 'login.html';
 }
 
-// After login, you can redirect back using:
-const redirect = localStorage.getItem('redirectAfterLogin') || 'index.html';
-localStorage.removeItem('redirectAfterLogin');
-window.location.href = redirect;
-
-
-if (protectedPages.includes(currentPage) && !isLoggedIn()) {
-  // Trying to access a protected page while logged out
-  redirectAfterLogin = currentPage; 
-  window.location.href = redirectAfterLogin;
+// Redirect logged-in users away from login page
+if (currentPage === 'login.html' && isLoggedIn()) {
+  window.location.href = 'index.html';
 }
 
-// ===== Sidebar Toggle =====
+// After login, redirect back if saved
+if (currentPage === 'login.html' && localStorage.getItem('redirectAfterLogin')) {
+  const redirect = localStorage.getItem('redirectAfterLogin');
+  localStorage.removeItem('redirectAfterLogin');
+  window.location.href = redirect;
+}
+
+
+/* ============================
+        SIDEBAR & MENU
+============================ */
 const hamburger = document.getElementById('hamburger');
 const sideMenu = document.getElementById('sideMenu');
 const overlay = document.getElementById('overlay');
@@ -37,152 +38,103 @@ function openMenu() {
   sideMenu.classList.add('active');
   overlay.classList.add('active');
 }
-
 function closeMenu() {
   sideMenu.classList.remove('active');
   overlay.classList.remove('active');
 }
 
-hamburger.addEventListener('click', openMenu);
-overlay.addEventListener('click', closeMenu);
+hamburger?.addEventListener('click', openMenu);
+overlay?.addEventListener('click', closeMenu);
 
-// Add close button inside sidebar
+// Close button inside sidebar
 const closeBtn = document.createElement('div');
 closeBtn.innerHTML = '&times;';
 closeBtn.className = 'close-btn';
-sideMenu.prepend(closeBtn);
-closeBtn.addEventListener('click', closeMenu);
+sideMenu?.prepend(closeBtn);
+closeBtn?.addEventListener('click', closeMenu);
 
-// ===== Authentication helpers =====
-function isLoggedIn() {
-  return !!localStorage.getItem('edu_token');
-}
-
-// If on login page and already logged in, send to index
-if (currentPage === 'login.html' && isLoggedIn()) {
-  window.location.href = 'index.html';
-}
-
-// Logout button handler (clears local storage and redirects
+/* ============================
+        LOGOUT & AUTH
+============================ */
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
   logoutBtn.addEventListener('click', async () => {
     try {
       const token = localStorage.getItem('edu_token');
-      // Optionally inform backend to invalidate token
       await fetch('http://localhost:5000/logout', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-    } catch(e) {}
+    } catch (e) {}
     localStorage.removeItem('edu_token');
     localStorage.removeItem('edu_user');
     window.location.href = 'login.html';
   });
 }
 
-// Change password
-const changePasswordBtn = document.getElementById('changePasswordBtn');
-changePasswordBtn.addEventListener('click', async () => {
-  const current = prompt('Enter current password:');
-  const newPass = prompt('Enter new password:');
-  if (!current || !newPass) return alert('Both fields are required');
+/* ============================
+       REGISTRATION
+============================ */
+document.getElementById('registerBtn')?.addEventListener('click', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('regName')?.value.trim();
+  const username = document.getElementById('regUser')?.value.trim();
+  const email = document.getElementById('regEmail')?.value.trim();
+  const password = document.getElementById('regPass')?.value;
+  const confirm = document.getElementById('regConfirm')?.value;
 
-  const token = localStorage.getItem('edu_token');
+  if (!name || !username || !email || !password) return alert('Please fill in all fields.');
+  if (password !== confirm) return alert('Passwords do not match.');
+
   try {
-    const res = await fetch('http://localhost:5000/users/change-password', {
+    const res = await fetch('http://localhost:5000/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ currentPassword: current, newPassword: newPass })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, username, email, password })
     });
     const data = await res.json();
-    if (res.ok) alert(data.message);
-    else alert(data.error);
-  } catch (err) { console.error(err); alert('Server error'); }
+    if (res.ok && data.token) {
+      localStorage.setItem('edu_token', data.token);
+      localStorage.setItem('edu_user', JSON.stringify(data.user));
+      alert('Registration successful! Redirecting...');
+      window.location.href = 'index.html';
+    } else {
+      alert(data.error || 'Registration failed.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Server error. Try again later.');
+  }
 });
 
-// ===== Registration =====
-const registerBtnGlobal = document.getElementById('registerBtn'); // in case other pages use same id
-if (registerBtnGlobal) {
-  registerBtnGlobal.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('regName') ? document.getElementById('regName').value.trim() : '';
-    const username = document.getElementById('regUser') ? document.getElementById('regUser').value.trim() : '';
-    const email = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim() : '';
-    const password = document.getElementById('regPass') ? document.getElementById('regPass').value : '';
-    const confirm = document.getElementById('regConfirm') ? document.getElementById('regConfirm').value : '';
-
-    if (!name || !username || !email || !password) {
-      alert('Please fill in all fields.');
-      return;
-    }
-    if (password !== confirm) {
-      alert('Passwords do not match.');
-      return;
-    }
-
-    try {
-      const res = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, username, email, password })
-      });
-      const data = await res.json();
-      if (res.ok && data.token) {
-        // Save token & user and redirect
-        localStorage.setItem('edu_token', data.token);
-        localStorage.setItem('edu_user', JSON.stringify(data.user));
-        alert('Registration successful! Redirecting...');
-        window.location.href = 'index.html';
-      } else {
-        alert(data.error || 'Registration failed.');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Server error. Try again later.');
-    }
-  });
-}
-
-
+/* ============================
+         PROFILE EDIT
+============================ */
 const editProfileBtn = document.getElementById('editProfileBtn');
-
 if (editProfileBtn) {
   editProfileBtn.addEventListener('click', async () => {
-    const token = localStorage.getItem('edu_token'); // use the correct key
+    const token = localStorage.getItem('edu_token');
     if (!token) return alert('You are not logged in');
 
     try {
-      // Fetch current user info
-      const res = await fetch('http://localhost:5000/profile', { 
-        headers: { 'Authorization': 'Bearer ' + token } 
+      const res = await fetch('http://localhost:5000/profile', {
+        headers: { 'Authorization': 'Bearer ' + token }
       });
-
       const data = await res.json();
       if (!res.ok) return alert(data.error || 'Failed to fetch profile');
 
-      // Ask for new values
       const newName = prompt('Edit Name:', data.user.name);
       const newEmail = prompt('Edit Email:', data.user.email);
-
       if (!newName || !newEmail) return alert('Both fields are required');
 
-      // Send update request
       const updateRes = await fetch(`http://localhost:5000/users/${data.user.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ name: newName, email: newEmail })
       });
-
       const updated = await updateRes.json();
-      if (updateRes.ok) {
-        alert('Profile updated successfully!');
-      } else {
-        alert(updated.error || 'Failed to update profile');
-      }
+      if (updateRes.ok) alert('Profile updated successfully!');
+      else alert(updated.error || 'Failed to update profile');
 
     } catch (err) {
       console.error(err);
