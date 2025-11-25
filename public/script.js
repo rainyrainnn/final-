@@ -1,7 +1,26 @@
-// Remember the page user tried to access
-let redirectAfterLogin = 'index.html';
+// script.js - top section
 const currentPage = window.location.pathname.split('/').pop();
-const protectedPages = ['planner.html', 'flashcards.html', 'library.html'];
+
+// Define which pages require login
+const protectedPages = ['index.html', 'planner.html', 'flashcards.html', 'library.html', 'dashboard.html'];
+
+// Simple check if user is logged in
+function isLoggedIn() {
+  return !!localStorage.getItem('edu_token'); // token stored after login
+}
+
+// If the current page is protected and user is not logged in -> redirect
+if (protectedPages.includes(currentPage) && !isLoggedIn()) {
+  // Optionally store where the user wanted to go
+  localStorage.setItem('redirectAfterLogin', currentPage);
+  window.location.href = 'login.html';
+}
+
+// After login, you can redirect back using:
+const redirect = localStorage.getItem('redirectAfterLogin') || 'index.html';
+localStorage.removeItem('redirectAfterLogin');
+window.location.href = redirect;
+
 
 if (protectedPages.includes(currentPage) && !isLoggedIn()) {
   // Trying to access a protected page while logged out
