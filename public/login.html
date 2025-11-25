@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>EduHub Login</title>
 
-  <!-- main site stylesheet -->
   <link rel="stylesheet" href="style.css" />
-  <!-- page-specific -->
   <link rel="stylesheet" href="login.css" />
 </head>
 <body>
@@ -19,6 +17,7 @@
       </header>
 
       <div class="forms">
+        <!-- LOGIN FORM -->
         <form id="loginForm" class="form" autocomplete="on" aria-describedby="errorMsg">
           <h2 class="form-heading">Welcome back</h2>
 
@@ -40,6 +39,7 @@
 
         <hr class="divider" />
 
+        <!-- REGISTER FORM -->
         <form id="registerForm" class="form" style="display:none" autocomplete="on">
           <h2 class="form-heading">Create an account</h2>
 
@@ -65,23 +65,38 @@
     </section>
   </main>
 
-  <!-- accent helper must run before other scripts to set CSS vars -->
+  <!-- Accent color script -->
   <script src="accent.js"></script>
 
-  <!-- your existing app scripts -->
   <script>
-    // Toggle forms (kept logic from your original file but simplified)
+    const API = 'http://localhost:5000';
+
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const showRegisterLink = document.getElementById('showRegisterLink');
     const cancelRegister = document.getElementById('cancelRegister');
 
+    // Check if already logged in
+    const token = localStorage.getItem('edu_token');
+    if (token) {
+      // Optional: show message instead of redirect
+      const msg = document.createElement('p');
+      msg.textContent = 'You are already logged in.';
+      msg.style.textAlign = 'center';
+      msg.style.margin = '12px 0';
+      msg.style.color = 'green';
+      loginForm.prepend(msg);
+      // Optionally hide form to prevent re-login
+      // loginForm.style.display = 'none';
+    }
+
+    // Toggle forms
     if (showRegisterLink) showRegisterLink.addEventListener('click', (e) => {
       e.preventDefault();
       loginForm.style.display = 'none';
       registerForm.style.display = '';
       registerForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const first = document.getElementById('regName'); if (first) first.focus();
+      document.getElementById('regName').focus();
     });
 
     if (cancelRegister) cancelRegister.addEventListener('click', () => {
@@ -89,13 +104,11 @@
       loginForm.style.display = '';
     });
 
-    // ---------- API endpoints and auth (kept from your original)
-    const API = 'http://localhost:5000';
-    const loginBtn = document.getElementById('loginBtn');
-    const errorMsg = document.getElementById('errorMsg');
-
-    if (loginBtn) loginBtn.addEventListener('click', async () => {
+    // LOGIN
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const errorMsg = document.getElementById('errorMsg');
       errorMsg.textContent = '';
+
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
 
@@ -114,9 +127,8 @@
         if (res.ok && data.token) {
           localStorage.setItem('edu_token', data.token);
           localStorage.setItem('edu_user', JSON.stringify(data.user || { username }));
-          // preserve accent chosen by user if returned
           if (data.user && data.user.accent) localStorage.setItem('edu_accent', data.user.accent);
-          window.location.href = 'index.html';
+          window.location.href = 'index.html'; // redirect AFTER login success
         } else {
           errorMsg.textContent = data.error || 'Login failed';
         }
@@ -126,11 +138,9 @@
       }
     });
 
-    // Registration
-    const registerBtn = document.getElementById('registerBtn');
-    const regMsg = document.getElementById('regMsg');
-
-    if (registerBtn) registerBtn.addEventListener('click', async () => {
+    // REGISTER
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+      const regMsg = document.getElementById('regMsg');
       regMsg.textContent = '';
       regMsg.style.color = 'red';
 
@@ -174,7 +184,6 @@
     });
   </script>
 
-  <!-- optional: your global script -->
   <script src="script.js"></script>
 </body>
 </html>
