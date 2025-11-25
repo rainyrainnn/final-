@@ -1,16 +1,6 @@
 // =====================
-// SERVER.JS - CLEAN VERSION
+// SERVER.JS - CONNECTED TO PG
 // =====================
-
-app.get('/api/db-test', async (req, res) => {
-  try {
-    const r = await pool.query('SELECT 1 as ok');
-    res.json({ db: 'ok', rows: r.rows });
-  } catch (err) {
-    console.error('DB test failed', err);
-    res.status(500).json({ error: 'db test failed', details: err.message });
-  }
-});
 
 // Load environment variables
 require('dotenv').config();
@@ -21,16 +11,26 @@ const path = require('path');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const pool = require('./db'); // PostgreSQL connection
+const { Pool } = require('pg'); // Postgres
 
-// Initialize Express
+// =====================
+// POSTGRES CONNECTION
+// =====================
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // your Render or local Postgres URL
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, // needed for Render
+});
+
+// =====================
+// INITIALIZE EXPRESS
+// =====================
 const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // parse JSON requests
-app.use(express.static(path.join(__dirname, 'public'))); // serve frontend files
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // =====================
 // JWT AUTHENTICATION MIDDLEWARE
@@ -46,6 +46,19 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+
+// =====================
+// TEST DATABASE CONNECTION
+// =====================
+app.get('/api/db-test', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT 1 as ok');
+    res.json({ db: 'ok', rows: result.rows });
+  } catch (err) {
+    console.error('DB test failed', err);
+    res.status(500).json({ error: 'db test failed', details: err.message });
+  }
+});
 
 // =====================
 // ROUTES
