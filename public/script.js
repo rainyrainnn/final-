@@ -1,32 +1,23 @@
-/* ============================
-       LOGIN-FIRST REDIRECT
-============================ */
 const currentPage = window.location.pathname.split('/').pop();
 const protectedPages = ['index.html', 'planner.html', 'flashcards.html', 'library.html', 'dashboard.html'];
 
 function isLoggedIn() {
-  return !!localStorage.getItem('edu_token');
+  return !!localStorage.getItem('edu_token'); // token stored after login
 }
 
-// Force login for protected pages
+// Redirect to login if page is protected and user is not logged in
 if (protectedPages.includes(currentPage) && !isLoggedIn()) {
+  // store the page user originally wanted
   localStorage.setItem('redirectAfterLogin', currentPage);
   window.location.href = 'login.html';
 }
 
-// Redirect logged-in users away from login page
+// After successful login, redirect back if needed
 if (currentPage === 'login.html' && isLoggedIn()) {
-  window.location.href = 'index.html';
-}
-
-// After login, redirect back if saved
-if (currentPage === 'login.html' && localStorage.getItem('redirectAfterLogin')) {
-  const redirect = localStorage.getItem('redirectAfterLogin');
+  const redirect = localStorage.getItem('redirectAfterLogin') || 'index.html';
   localStorage.removeItem('redirectAfterLogin');
   window.location.href = redirect;
 }
-
-
 /* ============================
         SIDEBAR & MENU
 ============================ */
