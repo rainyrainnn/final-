@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards – EduHub</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="flashcards.css">
+</head>
+
+<body>
+
+ <!-- Header -->
+  <header class="header">
+    <div class="logo">📚 EduHub</div>
+    <a href="index.html" class="back-btn">⬅ Home</a>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Flashcards</h1>
+      <p>Create, review, and master key concepts with personalized flashcards to supercharge your learning.</p>
+    </section>
+
+
+  <!-- Sidebar -->
+  <nav class="side-menu" id="sideMenu">
+
+    <div class="menu-section">
+      <h3 class="menu-title">🎨 Appearance</h3>
+      <div class="menu-content">
+        <label>Theme:</label>
+        <select id="themeSelect">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="auto">Auto</option>
+        </select>
+
+        <label>Accent Color:</label>
+        <select id="accentSelect">
+          <option value="blue">Blue</option>
+          <option value="pink">Pink</option>
+          <option value="green">Green</option>
+          <option value="violet">Violet</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <h3 class="menu-title">👤 Account</h3>
+      <div class="menu-content">
+        <button>Edit Profile</button>
+        <button>Change Password</button>
+        <button>Logout</button>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- MAIN PAGE CONTENT -->
+  <main class="flashcard-container">
+
+    <!-- LEFT SIDE: DECK MANAGER -->
+    <section class="deck-panel">
+      <h2>📁 Flashcard Decks</h2>
+
+      <div class="deck-form">
+        <input id="deckName" type="text" placeholder="New deck name...">
+        <button id="createDeckBtn" class="accent-btn">Add Deck</button>
+      </div>
+
+      <ul id="deckList" class="deck-list"></ul>
+    </section>
+
+    <!-- RIGHT SIDE: FLASHCARDS / STUDY -->
+    <section class="cards-panel">
+      <h2 id="activeDeckTitle">Select a deck</h2>
+
+      <!-- TABS -->
+      <div class="tab-bar">
+        <button class="tab active" data-tab="createTab">Create Cards</button>
+        <button class="tab" data-tab="studyTab">Study Mode</button>
+      </div>
+
+      <!-- CREATE TAB -->
+      <div id="createTab" class="tab-content active">
+        <div class="card-form">
+          <input id="fcFront" type="text" placeholder="Front (Question)">
+          <input id="fcBack" type="text" placeholder="Back (Answer)">
+          <button id="createCardBtn" class="accent-btn">Add Card</button>
+        </div>
+
+        <ul id="cardList" class="card-list"></ul>
+      </div>
+
+      <!-- STUDY TAB -->
+      <div id="studyTab" class="tab-content">
+
+        <div class="study-card" id="studyCard">
+          <div class="study-inner" id="studyInner">
+            <div class="front" id="studyFront"></div>
+            <div class="back" id="studyBack"></div>
+          </div>
+        </div>
+
+        <div class="study-controls">
+          <button id="prevCard">⟵ Previous</button>
+          <button id="flipCard">🔄 Flip</button>
+          <button id="nextCard">Next ⟶</button>
+        </div>
+
+        <div class="spaced-buttons">
+          <button class="rate-btn again" data-rate="again">Again</button>
+          <button class="rate-btn good" data-rate="good">Good</button>
+          <button class="rate-btn easy" data-rate="easy">Easy</button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="flashcards.js"></script>
+  <script src="accent.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

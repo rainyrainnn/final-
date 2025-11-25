@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduHub Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Overlay -->
+  <div id="overlay"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <img src="logo.png" alt="EduHub" class="brand-logo">
+      <div class="site-title">Edu Hub</div>
+    </div>
+    <div class="header-visual" aria-hidden="true"></div>
+    <div class="hamburger" id="hamburger">&#9776;</div>
+  </header>
+
+  <section class="hero">
+  <img src="logo.png" class="hero-logo" alt="EduHub Logo">
+  <h1 class="hero-title">Welcome to EduHub</h1>
+  <p class="hero-sub">Your all-in-one study companion.</p>
+  <button class="hero-btn">Start Learning</button>
+</section>
+
+
+  <!-- Sidebar Menu -->
+<nav class="side-menu" id="sideMenu">
+  <div class="menu-section">
+    <h3 class="menu-title">🎨 Appearance</h3>
+    <div class="menu-content">
+      <label>Mode:</label>
+      <select id="themeMode">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+      <label>Font Size:</label>
+      <select id="fontSizeSelect">
+        <option value="small">Small</option>
+        <option value="medium" selected>Medium</option>
+        <option value="large">Large</option>
+      </select>
+      <label>Accent:</label>
+      <div class="accent-palette" style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <button class="accent-swatch" data-accent="#ff7a59" title="Default" aria-label="Default accent" style="background:#ff7a59;border:2px solid #fff;width:28px;height:28px;border-radius:6px;box-shadow:0 0 0 2px rgba(0,0,0,0.06);"></button>
+        <button class="accent-swatch" data-accent="#ff4da6" title="Pink" aria-label="Pink accent" style="background:#ff4da6;width:28px;height:28px;border-radius:6px;box-shadow:0 0 0 2px rgba(0,0,0,0.06);"></button>
+        <button class="accent-swatch" data-accent="#2ecc71" title="Green" aria-label="Green accent" style="background:#2ecc71;width:28px;height:28px;border-radius:6px;box-shadow:0 0 0 2px rgba(0,0,0,0.06);"></button>
+        <button class="accent-swatch" data-accent="#9b59b6" title="Purple" aria-label="Purple accent" style="background:#9b59b6;width:28px;height:28px;border-radius:6px;box-shadow:0 0 0 2px rgba(0,0,0,0.06);"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <h3 class="menu-title">👤 Account</h3>
+    <div class="menu-content">
+      <div class="menu-box">
+        <button id="editProfileBtn">Edit Profile</button>
+        <button id="changePasswordBtn">Change Password</button>
+        <button id="logoutBtn">Logout</button>
+      </div>
+    </div> 
+  </div>
+
+  <div class="menu-section">
+    <h3 class="menu-title">🔔 Notifications</h3>
+    <div class="menu-content">
+      <div class="menu-box">
+        <label><input type="checkbox" id="appNotifToggle" checked> App Notifications</label>
+        <label><input type="checkbox" id="dailyReminderToggle"> Daily Study Reminder</label>
+        <label><input type="checkbox" id="taskAlertToggle"> Task Alerts</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <h3 class="menu-title">📘 Study Preferences</h3>
+    <div class="menu-content">
+      <div class="menu-box">
+        <label>Pomodoro Default Time:</label>
+        <select id="pomodoroTimeSelect">
+          <option value="25">25 mins</option>
+          <option value="50">50 mins</option>
+        </select>
+        <label>Break Time:</label>
+        <select id="breakTimeSelect">
+          <option value="5">5 mins</option>
+          <option value="10">10 mins</option>
+        </select>
+        <label><input type="checkbox" id="autoSaveNotesToggle" checked> Auto-save Notes</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-section">
+    <h3 class="menu-title">💾 Data & Storage</h3>
+    <div class="menu-content">
+      <div class="menu-box">
+        <button id="clearCacheBtn">Clear Cache</button>
+        <button id="resetDataBtn">Reset All Data</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Main Content -->
+  <main>
+    <!-- Daily Quote -->
+    <section class="daily-quote">
+      <p id="quote">Loading quote...</p>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="quick-links">
+      <a href="planner.html" class="quick-box">🗓️ Planner</a>
+      <a href="flashcards.html" class="quick-box">🃏 Flashcards</a>
+      <a href="library.html" class="quick-box">📖 Library</a>
+    </section>
+
+ <!-- Dashboard Layout -->
+<div class="dashboard-grid">
+
+  <!-- Row 1: Calendar + Study Progress -->
+  <section class="box wide">
+    <div class="row two-cols">
+      
+      <!-- Calendar -->
+      <div class="col">
+  <h2>Calendar</h2>
+
+  <div class="calendar-container small">
+    <div class="cal-header">
+      <button id="prevMonth">&lt;</button>
+      <h3 id="calTitle">Month Year</h3>
+      <button id="nextMonth">&gt;</button>
+    </div>
+
+    <div class="cal-weekdays small">
+      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+      <div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+
+    <div id="calDays" class="cal-days small"></div>
+  </div>
+
+  <!-- Task Popup -->
+  <div id="taskPopup" class="task-popup">
+    <h3>Add Task</h3>
+    <p id="popupDate"></p>
+    <div id="popupTasks"></div>
+    <input type="text" id="taskInput" placeholder="Task or schedule..." />
+    <button id="saveTaskBtn">Save Task</button>
+    <button id="closeTaskBtn" class="close">Cancel</button>
+  </div>
+</div>
+
+      <!-- Study streak -->
+    <div class="col">
+  <h2>Study Streak 🔥</h2>
+
+  <div class="streak-box">
+    <div class="streak-icon">🔥</div>
+
+    <div class="streak-stats">
+      <p><strong>Current Streak:</strong> <span id="currentStreak">0</span> days</p>
+      <p><strong>Longest Streak:</strong> <span id="longestStreak">0</span> days</p>
+    </div>
+  </div>
+
+  <div class="streak-goal">
+    <p>Daily Goal Progress: <span id="dailyGoalPct">0%</span></p>
+    <div class="progress-bar">
+      <div id="dailyGoalFill"></div>
+    </div>
+  </div>
+
+  <div class="streak-calendar" id="miniStreakCalendar">
+    <!-- JS will generate the past 7 days -->
+  </div>
+</div>
+
+
+  <!-- Row 2: Notes + Pomodoro -->
+  </div>
+  </section>
+  <section class="box wide">
+    <div class="row two-cols">
+
+      <!-- Notes -->
+      <div class="col">
+        <h2>Notes</h2>
+        <textarea id="noteInput" placeholder="Write something..."></textarea>
+        <button id="saveNote">Save Note</button>
+        <ul id="notesList"></ul>
+      </div>
+
+      <!-- Pomodoro -->
+      <div class="col">
+        <h2>Pomodoro Timer</h2>
+        <div id="timer">25:00</div>
+        <div class="pom-controls">
+          <button id="startBtn">Start</button>
+          <button id="pauseBtn">Pause</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+  </main>
+<!-- About Us -->
+<section class="about">
+  <img src="your-image.png" alt="About EduHub">
+  <div class="about-text">
+    <h2>About EduHub</h2>
+    <p>
+      EduHub is created for students who want to learn smarter, not harder.
+      Track your progress, manage your tasks, take notes, and stay motivated — all in one place.
+    </p>
+  </div>
+</section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 EduHub</p>
+  </footer>
+
+  <script src="accent.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

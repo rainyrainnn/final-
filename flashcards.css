@@ -1,0 +1,484 @@
+
+/* -----------------------------
+   HEADER
+------------------------------ */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--accent-color, #4a90e2);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.header .back-btn {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.header .back-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+/* -----------------------------
+   HERO
+------------------------------ */
+.hero {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--accent-gradient, linear-gradient(90deg, var(--accent-color, #4a90e2), #50e3c2));
+  color: #fff;
+  border-radius: 8px;
+  margin: 1rem 2rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   FLASHCARDS PAGE — LAYOUT
+============================================ */
+
+.flashcard-container {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  margin-top: 80px; /* space for header */
+}
+
+/* Left Panel — Decks */
+.deck-panel {
+  flex: 0.8;
+  background: var(--bg-light);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.5s ease;
+}
+
+.deck-panel h2 {
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  font-size: 1.4rem;
+}
+
+.deck-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.deck-form input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid var(--border-light);
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.deck-form input:focus {
+  border-color: var(--accent);
+}
+
+/* Deck List */
+.deck-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.deck-item {
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--accent);
+}
+
+.deck-item:hover {
+  transform: translateX(4px);
+  background: var(--accent-transparent);
+}
+
+.deck-active {
+  background: var(--accent);
+  color: white;
+}
+
+/* Deck action buttons (Edit / Delete) */
+.deck-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.deck-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.deck-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.deck-actions .edit-deck,
+.deck-actions .delete-deck {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.deck-actions .delete-deck {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.deck-actions .delete-deck:hover {
+  background: rgba(0,0,0,0.02);
+  transform: translateY(-2px);
+}
+
+
+@media (max-width: 600px) {
+  .deck-row { gap: 8px; }
+  .deck-actions .edit-deck, .deck-actions .delete-deck { padding: 6px 8px; font-size: 0.85rem; }
+}
+
+/* ====================================================
+   RIGHT PANEL — CARDS & STUDY MODE
+==================================================== */
+
+.cards-panel {
+  flex: 2;
+  background: var(--bg-light);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.6s ease;
+}
+
+.cards-panel h2 {
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.tab {
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: 0.2s;
+}
+
+.tab:hover {
+  background: var(--accent-transparent);
+}
+
+.tab.active {
+  background: var(--accent);
+  color: white;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.4s ease;
+}
+
+/* ====================================================
+   CREATE TAB — CARD CREATOR
+==================================================== */
+
+.card-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.card-form input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid var(--border-light);
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.card-form input:focus {
+  border-color: var(--accent);
+}
+
+/* Card List */
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-item {
+  background: var(--bg);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  animation: slideIn 0.35s ease;
+}
+
+.card-item-title {
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.card-item-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.small-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--bg-light2);
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.small-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* Accent primary buttons (Add Deck / Add Card) */
+.accent-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(33, 100, 255, 0.12);
+  cursor: pointer;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.12s ease;
+}
+
+.accent-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(33, 100, 255, 0.16);
+  opacity: 0.98;
+}
+
+.accent-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 22px rgba(33, 100, 255, 0.12);
+}
+
+.accent-btn:focus {
+  outline: 3px solid rgba(78,125,255,0.12);
+  outline-offset: 3px;
+}
+
+/* Slightly smaller variant for compact places */
+.accent-btn.small {
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+/* ====================================================
+   STUDY TAB — FLASHCARD FLIP
+==================================================== */
+
+.study-card {
+  width: 100%;
+  height: 250px;
+  perspective: 1000px;
+  margin-bottom: 20px;
+}
+
+.study-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+.study-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.study-card .front,
+.study-card .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  backface-visibility: hidden;
+}
+
+.study-card .back {
+  transform: rotateY(180deg);
+}
+
+/* Controls */
+.study-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.study-controls button {
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.study-controls button:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Spaced repetition buttons */
+.spaced-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.rate-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.rate-btn.again {
+  background: #d9534f;
+}
+.rate-btn.good {
+  background: #f0ad4e;
+}
+.rate-btn.easy {
+  background: #5cb85c;
+}
+
+.rate-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ====================================================
+   RESPONSIVE DESIGN
+==================================================== */
+
+@media (max-width: 1000px) {
+  .flashcard-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-form {
+    flex-direction: column;
+  }
+  .deck-form {
+    flex-direction: column;
+  }
+}
+
+/* ====================================================
+   ANIMATIONS
+==================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Accent & Theme Variables */
+:root {
+  --bg: var(--bg-default);
+  --bg-light: var(--bg-light-default);
+  --bg-light2: var(--bg-light2-default);
+  --text-primary: var(--text-color);
+  --text-secondary: var(--text-secondary-color);
+  --border-light: rgba(0,0,0,0.1);
+  --shadow: 0 4px 10px rgba(0,0,0,0.08);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.06);
+
+  /* tie into global accent variables */
+  --accent: var(--accent-color, #4e7dff);
+  --accent-dark: var(--accent-dark, var(--accent));
+  --accent-transparent: var(--accent-transparent, rgba(78, 125, 255, 0.12));
+}

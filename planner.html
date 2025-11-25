@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planner – EduHub</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="planner.css" />
+</head>
+
+<body>
+
+ <!-- Header -->
+  <header class="header">
+    <div class="logo">📚 EduHub</div>
+    <a href="index.html" class="back-btn">⬅ Home</a>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Planner</h1>
+      <p>Organize your tasks, deadlines, and study schedule to stay productive and on top of your coursework.</p>
+    </section>
+
+  <!-- Sidebar (Same as Dashboard) -->
+  <nav class="side-menu" id="sideMenu">
+
+    <div class="menu-section">
+      <h3 class="menu-title">🎨 Appearance</h3>
+      <div class="menu-content">
+        <label>Theme:</label>
+        <select id="themeSelect">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="auto">Auto</option>
+        </select>
+
+        <label>Accent Color:</label>
+        <select id="accentSelect">
+          <option value="blue">Blue</option>
+          <option value="pink">Pink</option>
+          <option value="green">Green</option>
+          <option value="violet">Violet</option>
+        </select>
+
+        <label>Font Size:</label>
+        <select id="fontSizeSelect">
+          <option value="small">Small</option>
+          <option value="medium" selected>Medium</option>
+          <option value="large">Large</option>
+        </select>
+
+        <label>
+          <input type="checkbox" id="highContrastToggle">
+          High Contrast Mode
+        </label>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <h3 class="menu-title">👤 Account</h3>
+      <div class="menu-content">
+        <button id="editProfileBtn">Edit Profile</button>
+        <button id="changePasswordBtn">Change Password</button>
+        <button id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <h3 class="menu-title">🔔 Notifications</h3>
+      <div class="menu-content">
+        <label><input type="checkbox" id="appNotifToggle" checked> App Notifications</label>
+        <label><input type="checkbox" id="dailyReminderToggle"> Daily Study Reminder</label>
+        <label><input type="checkbox" id="taskAlertToggle"> Task Alerts</label>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="planner-container">
+
+    <!-- LEFT SIDE — TASK MANAGER -->
+    <section class="tasks-panel">
+      <h2>🗂️ Your Tasks</h2>
+
+      <!-- Add Task Form -->
+      <div class="task-form">
+        <input id="taskTitle" type="text" placeholder="Task title..." />
+        <textarea id="taskDesc" placeholder="Description (optional)..."></textarea>
+
+        <div class="form-row">
+          <label>Due Date:</label>
+          <input id="taskDue" type="date" />
+        </div>
+
+        <div class="form-row">
+          <label>Priority:</label>
+          <select id="taskPriority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label>Category:</label>
+          <select id="taskCategory">
+            <option value="General">General</option>
+            <option value="Assignment">Assignment</option>
+            <option value="Exam">Exam</option>
+            <option value="Project">Project</option>
+            <option value="Personal">Personal</option>
+          </select>
+        </div>
+
+        <button id="addTaskBtn" class="accent-btn">Add Task</button>
+      </div>
+
+      <!-- Task List -->
+      <ul id="taskList" class="task-list"></ul>
+    </section>
+
+    <!-- RIGHT SIDE — WEEKLY CALENDAR -->
+    <section class="calendar-panel">
+      <h2>📅 Weekly Planner</h2>
+
+      <div class="week-grid">
+        <div class="day-column"><h3>Monday</h3><ul data-day="Mon"></ul></div>
+        <div class="day-column"><h3>Tuesday</h3><ul data-day="Tue"></ul></div>
+        <div class="day-column"><h3>Wednesday</h3><ul data-day="Wed"></ul></div>
+        <div class="day-column"><h3>Thursday</h3><ul data-day="Thu"></ul></div>
+        <div class="day-column"><h3>Friday</h3><ul data-day="Fri"></ul></div>
+        <div class="day-column"><h3>Saturday</h3><ul data-day="Sat"></ul></div>
+        <div class="day-column"><h3>Sunday</h3><ul data-day="Sun"></ul></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="planner.js"></script>
+  <script src="accent.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>

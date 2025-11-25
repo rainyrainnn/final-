@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduHub Library</title>
+  <link rel="stylesheet" href="library.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">📚 EduHub</div>
+    <a href="index.html" class="back-btn">⬅ Home</a>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Library</h1>
+      <p>Explore books, articles, and resources to boost your studies.</p>
+    </section>
+
+    <!-- Search -->
+    <section class="library-search">
+      <input type="text" id="searchInput" placeholder="Search books, authors, topics..." />
+    </section>
+
+    <!-- Categories -->
+    <section class="library-categories">
+      <h2>Categories</h2>
+      <div class="categories-grid" id="categoryGrid">
+        <!-- JS will populate categories -->
+      </div>
+    </section>
+
+    <!-- Book List -->
+    <section class="library-list">
+      <h2>Books & Resources</h2>
+      <ul id="bookList" class="book-grid">
+        <!-- JS will populate books -->
+      </ul>
+    </section>
+
+    <!-- Add New Book -->
+    <section class="library-add">
+      <h2>Add New Resource</h2>
+      <input type="text" id="bookTitle" placeholder="Book / Article Title" />
+      <input type="text" id="bookAuthor" placeholder="Author" />
+      <input type="text" id="bookCategory" placeholder="Category" />
+      <input type="url" id="bookURL" placeholder="URL (optional)" />
+      <button id="addBookBtn">Add Resource</button>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 EduHub</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="library.js"></script>
+  <script src="accent.js"></script>
+</body>
+</html>

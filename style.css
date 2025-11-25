@@ -1,0 +1,993 @@
+/* Reset and basic styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  color: var(--text-color, #111827);
+  background-color: #f5f6fa;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  background: var(--card-bg);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: var(--accent-gradient, linear-gradient(135deg, var(--accent-color), #ff9b7b));
+  color: var(--accent-text, #fff);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+.site-title {
+  font-family: 'Poppins', Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+.header-visual {
+  flex: 1 1 auto;
+  height: 64px;
+  margin-left: 16px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(255,122,89,0.12), rgba(15,181,166,0.08));
+}
+
+.top-links a {
+  margin-left: 20px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.top-links a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hamburger {
+  display: block !important; /* forces it to show */
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* Side Menu */
+
+/* Sidebar from the right */
+.side-menu {
+  position: fixed;       /* stay fixed on screen */
+  top: 0;
+  right: -300px;         /* hidden initially on the right */
+  width: 250px;
+  height: 100vh;         /* full viewport height */
+  background: #fff;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1); /* shadow from left side */
+  padding: 20px;
+  overflow-y: auto;      /* scroll inside sidebar if content is long */
+  transition: right 0.3s;
+  z-index: 1000;
+}
+
+.side-menu.active {
+  right: 0;              /* slide in when active */
+}
+
+/* Hamburger stays on right */
+.hamburger {
+  display: none; 
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .top-links {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+
+/* Optional overlaay */
+body.menu-open::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 900; /* below sidebar but above main content */
+}
+
+
+.menu-section h3 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: var(--accent-color);
+}
+
+.menu-section label,
+.menu-section select,
+.menu-section button {
+  display: block;
+  margin: 8px 0;
+}
+
+.menu-section button {
+  padding: 8px 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: transparent;
+  color: var(--text-primary, #111827);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.menu-section button:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.menu-content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  align-items: center;
+  margin: 6px 0 12px 0;
+  transition: all 0.2s ease;
+}
+
+.menu-section.active .menu-content {
+  display: grid;
+}
+
+/* Stack labels/controls on small screens for better alignment */
+@media (max-width: 480px) {
+  .menu-content { grid-template-columns: 1fr; }
+}
+
+/* Daily Quote */
+.daily-quote {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--accent-color);
+}
+
+/* Quick Links */
+.quick-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.quick-box {
+  padding: 15px 20px;
+  background: var(--accent-color);
+  color: var(--accent-text);
+  border-radius: 10px;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.quick-box:hover {
+  transform: scale(1.05);
+}
+
+/* Dashboard Grid */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 0 20px 20px;
+}
+
+.box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.box h2 {
+  margin-bottom: 15px;
+  color: var(--accent-color);
+}
+
+#timer {
+  font-size: 2rem;
+  margin: 15px 0;
+}
+
+/* Calendar */
+.calendar-container {
+  text-align: center;
+}
+
+.cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cal-weekdays, .cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.cal-weekdays div {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.cal-days div {
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 2px;
+  transition: background 0.3s;
+}
+
+.cal-days div:hover {
+  background: var(--accent-color);
+  color: var(--accent-text);
+}
+
+/* Progress Bars */
+.progress-bar {
+  width: 100%;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+  margin-bottom: 10px;
+}
+
+.progress-bar div {
+  height: 100%;
+  background: var(--accent-color);
+  width: 0%;
+  transition: width 0.5s;
+}
+
+/* Notes */
+#noteInput {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+#saveNote {
+  background: var(--accent-color);
+  color: var(--accent-text);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+#saveNote:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+
+/* Pomodoro styling */
+#timer {
+  font-size: 3.4rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 10px 0;
+}
+.pom-controls { display:flex; gap:10px; justify-content:center; margin-top:10px; }
+.pom-controls button {
+  background: transparent;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.pom-controls button:hover { background: var(--accent-color); color: var(--accent-text); }
+
+#notesList li {
+  margin-bottom: 5px;
+  background: #f1f3f6;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 15px 0;
+  background: var(--accent-color);
+  color: var(--accent-text);
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .top-links {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+
+/* Overlay */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+  z-index: 900;
+}
+
+#overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sidebar Close Button */
+.close-btn {
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+/* Smooth transition for color changes */
+body, .box, .menu-section button, .quick-box, .progress-bar div {
+  transition: all 0.3s ease;
+}
+
+/* Dropdown Menu */
+.menu-content {
+  display: none;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.menu-section.active .menu-content {
+  display: block;
+}
+
+/* Add a pointer cursor to titles */
+.menu-title {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Optional: arrow indicator */
+.menu-title::after {
+  content: '▼';
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.menu-section.active .menu-title::after {
+  transform: rotate(-180deg);
+}
+/* High Contrast Mode */
+body.high-contrast {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+body.high-contrast header,
+body.high-contrast footer,
+body.high-contrast .box,
+body.high-contrast .side-menu {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+body.high-contrast button,
+body.high-contrast .quick-box {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 2px solid #fff !important;
+}
+
+body.high-contrast input,
+body.high-contrast textarea,
+body.high-contrast select {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+body.high-contrast .progress-bar {
+  background-color: #333 !important;
+}
+
+body.high-contrast .progress-bar div {
+  background-color: #fff !important;
+}
+
+/* HERO SECTION */
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+  /* allow an image via the --hero-bg variable, fallback to the original gradient */
+  background: var(--hero-bg, var(--accent-gradient, linear-gradient(135deg, var(--accent-color), #ff9b7b)));
+  color: var(--accent-text);
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-logo {
+  width: 120px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.hero-title {
+  margin-top: 20px;
+  font-size: 2.4rem;
+  font-weight: bold;
+  animation: fadeIn 1.5s ease forwards;
+  opacity: 0;
+}
+
+.hero-sub {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  opacity: 0;
+  animation: fadeIn 2.5s ease forwards;
+}
+
+.hero-btn {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  background: #fff;
+  color: var(--accent-color);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform .3s, background .3s;
+  opacity: 0;
+  animation: fadeIn 3s ease forwards;
+}
+
+.hero-btn:hover {
+  transform: scale(1.1);
+  background: #dce3ff;
+}
+
+/* Floating logo animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+body {
+  animation: fadePage 0.7s ease;
+}
+
+@keyframes fadePage {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.quick-box {
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  transition: transform .2s, box-shadow .3s;
+}
+
+.quick-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.side-menu {
+  transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#overlay.active {
+  animation: fadeOverlay .3s ease;
+}
+
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- DASHBOARD LAYOUT --- */
+
+.dashboard-grid {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.box.wide {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: 25px;
+}
+
+.two-cols .col {
+  flex: 1;
+}
+
+/* Make calendar column a bit smaller than the streak column on wide screens */
+/* Keep both columns equal width but make calendar content a bit more compact */
+.two-cols .calendar-col, .two-cols .streak-col { flex: 1; }
+
+/* Make calendar grid cells smaller so the calendar reads smaller visually */
+.calendar-container { max-width: 420px; margin: 0 auto; }
+.cal-days div { padding: 6px; min-height: 48px; }
+.day-number { font-weight: 700; margin-bottom: 4px; font-size: 0.95rem; }
+
+/* When a day has a task, tint the number's background with the accent while keeping the number visible */
+.day-box.has-task .day-number {
+  background: var(--accent-color);
+  color: var(--accent-text);
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+/* Small title that appears above the number; short and truncated */
+.task-top-title {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  color: var(--muted, #6b7280);
+  background: rgba(255,255,255,0.0);
+  padding: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 12px);
+  z-index: 4;
+}
+
+/* On narrower screens stack columns */
+@media (max-width: 900px) {
+  .two-cols .calendar-col, .two-cols .streak-col { flex: 1; }
+  .calendar-container { max-width: 100%; }
+}
+
+.three-cols .col {
+  flex: 1;
+}
+
+.col textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.announcement-list li {
+  background: #f1f3f6;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+/* --- ABOUT SECTION --- */
+
+.about {
+  margin-top: 40px;
+  padding: 40px 20px;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  background: var(--card-bg);
+  border-top: 3px solid var(--accent-color);
+}
+
+.about img {
+  width: 180px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.about-text {
+  max-width: 500px;
+}
+
+.about-text h2 {
+  color: var(--accent-color);
+  margin-bottom: 10px;
+}
+
+.about-text p {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+/* --- RESPONSIVE FIXES --- */
+
+@media (max-width: 900px) {
+  .row {
+    flex-direction: column;
+  }
+  
+  .about {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* CALENDAR WITH TASKS */
+.cal-days div {
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 2px;
+  transition: background 0.3s;
+  min-height: 60px;
+  position: relative;
+}
+
+.day-number {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* task bubble inside date box */
+.task-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Popup Box */
+.task-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card-bg);
+  padding: 20px;
+  width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 2000;
+}
+
+.task-popup h3 {
+  margin-bottom: 10px;
+  color: var(--accent-color);
+}
+
+.task-preview {
+  font-size: 0.85rem;
+  color: var(--muted, #6b7280);
+  margin-top: 6px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.03);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-popup input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(16,24,40,0.06);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.task-popup button {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.task-popup .close {
+  background: #d9534f;
+  color: #fff;
+}
+
+.task-popup button:hover {
+  opacity: 0.85;
+}
+
+/* Compact task indicator inside calendar day */
+.task-indicator {
+  height: 6px;
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 6px;
+  background: var(--accent-color);
+  opacity: 0.95;
+}
+.task-title-note {
+  font-size: 0.72rem;
+  color: var(--muted, #6b7280);
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Popup action buttons use accent color */
+#saveTaskBtn {
+  background: var(--accent-color);
+  color: var(--accent-text);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+#saveTaskBtn:hover { opacity: 0.95; transform: translateY(-2px); }
+
+#closeTaskBtn {
+  background: transparent;
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+#closeTaskBtn:hover { background: rgba(0,0,0,0.03); }
+
+/* day-box should be positioned so badges can overlap without hiding the number */
+.day-box { position: relative; }
+
+/* Small overlapping badge placed near the top-left of the day box */
+.task-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-color);
+  color: var(--accent-text);
+  padding: 4px 6px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  line-height: 1;
+  max-width: calc(100% - 12px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  opacity: 0.98;
+}
+
+.task-badge .badge-square {
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 2px;
+  flex: 0 0 auto;
+}
+
+.task-badge .badge-text {
+  display: inline-block;
+  vertical-align: middle;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* === Accent + UI polish overrides === */
+:root {
+  --accent-color: #ff7a59;
+  --accent-text: #ffffff;
+  --bg: #f5f6fa;
+  --card-bg: #ffffff;
+  --muted: #6b7280;
+  --text-color: #111827;
+}
+
+/* Prefer CSS variables for colors so JS can update them site-wide */
+body {
+  background-color: var(--bg);
+  color: #111827;
+}
+
+.header { background: var(--accent-color); color: var(--accent-text); }
+.menu-section h3 { color: var(--accent-color); }
+/* keep menu buttons neutral — don't override with accent */
+.menu-section button { background: transparent; color: var(--text-primary); border: 1px solid rgba(0,0,0,0.06); }
+.daily-quote { color: var(--accent-color); }
+.quick-box { background: var(--accent-color); color: var(--accent-text); }
+.box { background: var(--card-bg); border: 1px solid rgba(16,24,40,0.04); border-radius: 12px; box-shadow: 0 12px 30px rgba(16,24,40,0.04); }
+.box h2 { color: var(--accent-color); }
+#timer { font-size: 2.2rem; font-weight:700; }
+.pom-controls button { background: var(--accent-color); color: var(--accent-text); border-radius: 10px; padding: 8px 12px; border: none; }
+.cal-days div:hover { background: rgba(78,115,223,0.08); transform: translateY(-3px); }
+.progress-bar { background: #eef2ff; }
+.progress-bar div { background: var(--accent-color); }
+#noteInput { background: #fbfdff; border: 1px solid rgba(16,24,40,0.06); }
+footer { background: var(--accent-color); color: var(--accent-text); }
+.about { border-top-color: var(--accent-color); }
+.about-text h2 { color: var(--accent-color); }
+.task-dot { background: var(--accent-color); }
+.task-popup h3 { color: var(--accent-color); }
+.close-btn { color: #374151; font-size: 1.8rem; }
+.box:hover { transform: translateY(-6px); }
+
+/* Smaller screens tweaks */
+@media (max-width: 900px) {
+  .hero-title { font-size: 1.8rem; }
+  .hero-sub { font-size: 1rem; }
+  .dashboard-grid { padding: 12px; gap: 16px; }
+}
+
+/* Smooth transitions for theme changes */
+* { transition: color 0.22s ease, background-color 0.22s ease, border-color 0.22s ease; }
+
+/* Menu box style for equal-sized containers */
+.menu-box {
+  background: var(--card-bg);
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+}
+.menu-box button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-box label { display: flex; gap: 8px; align-items: center; }
+
+/* Dark mode variables */
+.dark-mode {
+  --bg: #071021;
+  --card-bg: #0d1522;
+  --accent-color: #ff7a59;
+  --accent-text: #ffffff;
+  --text-color: #dbeafe;
+}
+
+/* Inputs and editable areas should be readable in dark mode */
+input, textarea, select {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid rgba(16,24,40,0.06);
+  caret-color: var(--text-color);
+}
+textarea { color: var(--text-color); }
+
+/* Ensure popup and menu-box text uses text color */
+.task-popup, .menu-box {
+  color: var(--text-color);
+  background: var(--card-bg);
+}
+
+.task-popup button { color: var(--text-color); }
+
+/* Make menu-box span full width and match sizes */
+.menu-content > .menu-box {
+  grid-column: 1 / -1;
+}
+.menu-box {
+  min-height: 110px;
+  border-left: 4px solid var(--accent-color);
+}
+
+.streak-box {
+  background: var(--box-bg, #fff);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.streak-icon {
+  font-size: 45px;
+}
+
+.streak-stats p {
+  margin: 4px 0;
+}
+
+.streak-goal {
+  margin-bottom: 15px;
+}
+
+.streak-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 15px;
+}
+
+.streak-day {
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 12px;
+  background: #e0e0e0;
+  color: #333;
+}
+
+.streak-day.active {
+  background: var(--accent-color, #ff7a59);
+  color: #fff;
+}
+
+.side-menu a.active-link, .quick-links a.active-link {
+  background-color: var(--accent-color);
+  color: #fff;
+  border-radius: 6px;
+}

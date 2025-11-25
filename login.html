@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EduHub Login</title>
+
+  <!-- main site stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- page-specific -->
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <main class="page-wrap">
+    <section class="login-card" aria-labelledby="loginTitle">
+      <header class="login-head">
+        <img src="logo.png" alt="EduHub logo" class="login-logo" />
+        <h1 id="loginTitle" class="login-title">EduHub</h1>
+      </header>
+
+      <div class="forms">
+        <form id="loginForm" class="form" autocomplete="on" aria-describedby="errorMsg">
+          <h2 class="form-heading">Welcome back</h2>
+
+          <label class="sr-only" for="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="Username" autocomplete="username" />
+
+          <label class="sr-only" for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Password" autocomplete="current-password" />
+
+          <button id="loginBtn" type="button" class="btn-primary">Login</button>
+
+          <p id="errorMsg" class="msg error" role="status" aria-live="polite"></p>
+
+          <p class="small muted">
+            New here?
+            <a href="#" id="showRegisterLink" class="accent-link">Create account</a>
+          </p>
+        </form>
+
+        <hr class="divider" />
+
+        <form id="registerForm" class="form" style="display:none" autocomplete="on">
+          <h2 class="form-heading">Create an account</h2>
+
+          <input id="regName" type="text" placeholder="Full name" />
+          <input id="regUser" type="text" placeholder="Username" />
+          <div class="input-group">
+            <span class="input-icon" aria-hidden>📧</span>
+            <input id="regEmail" type="email" placeholder="Email address" />
+          </div>
+          <small class="muted">We'll send occasional updates — no spam.</small>
+
+          <input id="regPass" type="password" placeholder="Password" />
+          <input id="regConfirm" type="password" placeholder="Confirm password" />
+
+          <div class="actions">
+            <button id="registerBtn" type="button" class="btn-primary">Register</button>
+            <button id="cancelRegister" type="button" class="btn-ghost">Cancel</button>
+          </div>
+
+          <p id="regMsg" class="msg error" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- accent helper must run before other scripts to set CSS vars -->
+  <script src="accent.js"></script>
+
+  <!-- your existing app scripts -->
+  <script>
+    // Toggle forms (kept logic from your original file but simplified)
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const showRegisterLink = document.getElementById('showRegisterLink');
+    const cancelRegister = document.getElementById('cancelRegister');
+
+    if (showRegisterLink) showRegisterLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginForm.style.display = 'none';
+      registerForm.style.display = '';
+      registerForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const first = document.getElementById('regName'); if (first) first.focus();
+    });
+
+    if (cancelRegister) cancelRegister.addEventListener('click', () => {
+      registerForm.style.display = 'none';
+      loginForm.style.display = '';
+    });
+
+    // ---------- API endpoints and auth (kept from your original)
+    const API = 'http://localhost:5000';
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    if (loginBtn) loginBtn.addEventListener('click', async () => {
+      errorMsg.textContent = '';
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        errorMsg.textContent = 'Please enter username and password.';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('edu_token', data.token);
+          localStorage.setItem('edu_user', JSON.stringify(data.user || { username }));
+          // preserve accent chosen by user if returned
+          if (data.user && data.user.accent) localStorage.setItem('edu_accent', data.user.accent);
+          window.location.href = 'index.html';
+        } else {
+          errorMsg.textContent = data.error || 'Login failed';
+        }
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = 'Network error';
+      }
+    });
+
+    // Registration
+    const registerBtn = document.getElementById('registerBtn');
+    const regMsg = document.getElementById('regMsg');
+
+    if (registerBtn) registerBtn.addEventListener('click', async () => {
+      regMsg.textContent = '';
+      regMsg.style.color = 'red';
+
+      const name = document.getElementById('regName').value.trim();
+      const username = document.getElementById('regUser').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPass').value;
+      const confirm = document.getElementById('regConfirm').value;
+
+      if (!name || !username || !email || !password) {
+        regMsg.textContent = 'Please complete all fields.';
+        return;
+      }
+      if (password !== confirm) {
+        regMsg.textContent = 'Passwords do not match.';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, username, email, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('edu_token', data.token);
+          localStorage.setItem('edu_user', JSON.stringify(data.user));
+          if (data.user && data.user.accent) localStorage.setItem('edu_accent', data.user.accent);
+          regMsg.style.color = 'green';
+          regMsg.textContent = 'Registration successful — redirecting...';
+          setTimeout(() => window.location.href = 'index.html', 700);
+        } else {
+          regMsg.style.color = 'red';
+          regMsg.textContent = data.error || 'Registration failed';
+        }
+      } catch (err) {
+        console.error(err);
+        regMsg.textContent = 'Network error';
+      }
+    });
+  </script>
+
+  <!-- optional: your global script -->
+  <script src="script.js"></script>
+</body>
+</html>
