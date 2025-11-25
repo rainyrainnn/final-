@@ -1,3 +1,7 @@
+// =====================
+// SERVER.JS - CLEAN VERSION
+// =====================
+
 // Load environment variables
 require('dotenv').config();
 
@@ -7,7 +11,7 @@ const path = require('path');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const pool = require('./db'); // your database connection
+const pool = require('./db'); // PostgreSQL connection
 
 // Initialize Express
 const app = express();
@@ -15,48 +19,12 @@ const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // to parse JSON requests
+app.use(express.json()); // parse JSON requests
+app.use(express.static(path.join(__dirname, 'public'))); // serve frontend files
 
-// Serve frontend files from 'public' folder
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Example: serve index.html on root
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Example: API route
-app.get('/api/test', async (req, res) => {
-  res.send('API is working!');
-});
-
-// Start server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// PostgreSQL connection
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASS,
-  port: process.env.DB_PORT || 5432
-});
-
-// Test DB connection
-pool.connect()
-  .then(client => {
-    console.log('PostgreSQL connected!');
-    client.release();
-  })
-  .catch(err => console.error('PostgreSQL connection error:', err.stack));
-
-// Middleware to protect routes
+// =====================
+// JWT AUTHENTICATION MIDDLEWARE
+// =====================
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -69,20 +37,23 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// ===================== ROUTES =====================
+// =====================
+// ROUTES
+// =====================
 
-// Test route
-app.get('/dbtest', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    res.json({ time: result.rows[0] });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Database query error' });
-  }
+// Serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ===== Register =====
+// Test API
+app.get('/api/test', async (req, res) => res.send('API is working!'));
+
+// =====================
+// AUTH ROUTES
+// =====================
+
+// Register
 app.post('/register', async (req, res) => {
   const { name, username, email, password } = req.body;
   if (!name || !username || !email || !password)
@@ -103,100 +74,45 @@ app.post('/register', async (req, res) => {
       [name, username, email, hashedPassword]
     );
 
-    const token = jwt.sign(
-      { userId: newUser.rows[0].id },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
+    const token = jwt.sign({ userId: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: newUser.rows[0] });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// ===================== ACCOUNT MANAGEMENT =====================
-
-// Change password
-app.post('/users/change-password', authenticateToken, async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  if (!currentPassword || !newPassword) {
-    return res.status(400).json({ error: 'Current and new passwords are required' });
-  }
-
-  try {
-    const userQuery = await pool.query('SELECT password FROM users WHERE id=$1', [req.userId]);
-    if (userQuery.rows.length === 0) return res.status(404).json({ error: 'User not found' });
-
-    const hashedPassword = userQuery.rows[0].password;
-    const match = await bcrypt.compare(currentPassword, hashedPassword);
-    if (!match) return res.status(400).json({ error: 'Current password is incorrect' });
-
-    const newHashedPassword = await bcrypt.hash(newPassword, 10);
-    await pool.query('UPDATE users SET password=$1, updated_at=NOW() WHERE id=$2', [newHashedPassword, req.userId]);
-
-    res.json({ message: 'Password updated successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to update password' });
-  }
-});
-
-// Delete account (optional)
-app.delete('/users/delete', authenticateToken, async (req, res) => {
-  try {
-    await pool.query('DELETE FROM users WHERE id=$1', [req.userId]);
-    res.json({ message: 'Account deleted successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to delete account' });
-  }
-});
-
-
-// ===== Login =====
+// Login
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
     return res.status(400).json({ error: 'Username and password required' });
 
   try {
-    const userQuery = await pool.query(
-      'SELECT * FROM users WHERE username=$1',
-      [username]
-    );
-
+    const userQuery = await pool.query('SELECT * FROM users WHERE username=$1', [username]);
     if (userQuery.rows.length === 0)
       return res.status(400).json({ error: 'User not found' });
 
     const user = userQuery.rows[0];
-
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ error: 'Invalid password' });
 
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user.id, name: user.name, username: user.username, email: user.email } });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// ===== Profile (protected) =====
+// =====================
+// PROFILE & ACCOUNT ROUTES
+// =====================
+
+// Get profile
 app.get('/profile', authenticateToken, async (req, res) => {
   try {
-    const userQuery = await pool.query(
-      'SELECT id, name, username, email FROM users WHERE id=$1',
-      [req.userId]
-    );
+    const userQuery = await pool.query('SELECT id, name, username, email FROM users WHERE id=$1', [req.userId]);
     if (userQuery.rows.length === 0) return res.status(404).json({ error: 'User not found' });
     res.json({ user: userQuery.rows[0] });
   } catch (err) {
@@ -205,12 +121,10 @@ app.get('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// Update profile (name, username, email)
 // Update profile
 app.put('/users/:id', authenticateToken, async (req,res) => {
   const userId = req.params.id;
   const { name, email } = req.body;
-
   if (parseInt(userId) !== req.userId)
     return res.status(403).json({ error: 'Unauthorized' });
 
@@ -225,6 +139,51 @@ app.put('/users/:id', authenticateToken, async (req,res) => {
     res.status(500).json({ error: 'Failed to update profile' });
   }
 });
+
+// Change password
+app.post('/users/change-password', authenticateToken, async (req,res) => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Current and new passwords are required' });
+
+  try {
+    const userQuery = await pool.query('SELECT password FROM users WHERE id=$1', [req.userId]);
+    if (userQuery.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+
+    const match = await bcrypt.compare(currentPassword, userQuery.rows[0].password);
+    if (!match) return res.status(400).json({ error: 'Current password is incorrect' });
+
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    await pool.query('UPDATE users SET password=$1, updated_at=NOW() WHERE id=$2', [newHashedPassword, req.userId]);
+    res.json({ message: 'Password updated successfully' });
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update password' });
+  }
+});
+
+// Delete account
+app.delete('/users/delete', authenticateToken, async (req,res) => {
+  try {
+    await pool.query('DELETE FROM users WHERE id=$1', [req.userId]);
+    res.json({ message: 'Account deleted successfully' });
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to delete account' });
+  }
+});
+
+// =====================
+// SETTINGS, NOTES, TASKS, FLASHCARDS, POMODORO, STREAKS, QUOTES
+// =====================
+
+// ... keep all your routes as-is here, just ensure they all use `pool`
+// No duplicate `pool` declarations anywhere
+
+// =====================
+// START SERVER
+// =====================
+app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+
 
 
 // Get settings
