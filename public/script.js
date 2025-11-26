@@ -1,23 +1,49 @@
 const currentPage = window.location.pathname.split('/').pop();
-const protectedPages = ['index.html', 'planner.html', 'flashcards.html', 'library.html', 'dashboard.html'];
+const protectedPages = ['planner.html', 'flashcards.html', 'library.html', 'dashboard.html']; // removed index.html
 
-function isLoggedIn() {
-  return !!localStorage.getItem('edu_token'); // token stored after login
+const API_BASE = 'http://localhost:5000'; // make sure this matches your backend
+
+// Check if user is logged in by verifying token with backend
+async function isLoggedInAsync() {
+  const token = localStorage.getItem('edu_token');
+  if (!token) return false;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/verifyToken`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
-// Redirect to login if page is protected and user is not logged in
-if (protectedPages.includes(currentPage) && !isLoggedIn()) {
-  // store the page user originally wanted
-  localStorage.setItem('redirectAfterLogin', currentPage);
-  window.location.href = 'login.html';
-}
+// Immediately handle redirects on page load
+(async () => {
+  const loggedIn = await isLoggedInAsync();
 
-// After successful login, redirect back if needed
-if (currentPage === 'login.html' && isLoggedIn()) {
-  const redirect = localStorage.getItem('redirectAfterLogin') || 'index.html';
-  localStorage.removeItem('redirectAfterLogin');
-  window.location.href = redirect;
-}
+  // 1️⃣ If on a protected page and not logged in -> redirect to login
+  if (protectedPages.includes(currentPage) && !loggedIn) {
+    localStorage.setItem('redirectAfterLogin', currentPage);
+    window.location.href = 'login.html';
+    return; // stop further code execution
+  }
+
+  // 2️⃣ If on login page and already logged in -> redirect to previous page or dashboard
+  if (currentPage === 'login.html' && loggedIn) {
+    const redirect = localStorage.getItem('redirectAfterLogin') || 'dashboard.html';
+    localStorage.removeItem('redirectAfterLogin');
+    window.location.href = redirect;
+    return;
+  }
+
+  // 3️⃣ Optional: clear token if invalid
+  if (loggedIn === false && localStorage.getItem('edu_token')) {
+    localStorage.removeItem('edu_token');
+    localStorage.removeItem('edu_user');
+  }
+})();
+
 /* ============================
         SIDEBAR & MENU
 ============================ */
@@ -824,8 +850,6 @@ loadUserSettingsFromDB();
 /* ============================
    EVENT HELPERS: AUTH & API
 ============================ */
-
-const API_BASE = 'http://localhost:5000';
 
 // Helpers
 function getAuthHeaders() {
